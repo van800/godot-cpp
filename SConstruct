@@ -58,6 +58,7 @@ if scons_cache_path is not None:
 cpp_tool.generate(env)
 library = env.GodotCPP()
 
+# todo: generate a separate props file, which would be excluded from the vcs
 if env["vsproj"]:
     env["CPPPATH"] = [Dir(path) for path in env["CPPPATH"]]
     methods.write_include_paths_to_props_file(env, os.path.join(os.path.dirname(env.Dir(".").abspath), "godot.macos.editor.arm64.generated.props"))
