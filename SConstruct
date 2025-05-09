@@ -20,6 +20,15 @@ try:
     customs += Import("customs")
 except Exception:
     pass
+
+methods = ["methods.py"]
+try:
+    methods += Import("methods")
+except Exception:
+    pass
+
+import methods
+
 profile = ARGUMENTS.get("profile", "")
 if profile:
     if os.path.isfile(profile):
@@ -27,6 +36,7 @@ if profile:
     elif os.path.isfile(profile + ".py"):
         customs.append(profile + ".py")
 opts = Variables(customs, ARGUMENTS)
+opts.Add(BoolVariable("vsproj", "Generate a Visual Studio solution", False))
 cpp_tool = Tool("godotcpp", toolpath=["tools"])
 cpp_tool.options(opts, env)
 opts.Update(env)
@@ -47,5 +57,9 @@ if scons_cache_path is not None:
 
 cpp_tool.generate(env)
 library = env.GodotCPP()
+
+if env["vsproj"]:
+    env["CPPPATH"] = [Dir(path) for path in env["CPPPATH"]]
+    methods.write_include_paths_to_props_file(env, os.path.join(os.path.dirname(env.Dir(".").abspath), "godot.macos.editor.arm64.generated.props"))
 
 Return("env")
