@@ -17,10 +17,31 @@
 		</Expand>
 	</Type>
 
-	<!-- Development notes: there is no way to just ask AI to generate natvis entry for each `godot::` type
-	Each type required evaluation with LLDB console
+	<!-- Development notes: At the current state no AI can directly generate a natvis entry for each `godot::` type.
 	The testdata used for evaluation https://github.com/JetBrains/godot-support/wiki/Developing-godot%E2%80%90cpp.natvis
 	The change of the memory layout would require adjustments of the natvis
+
+	Approach:
+	1. For each type, inspect `opaque` bytes in LLDB using `memory read -size 8 -count N -format address` on
+	   the address stored in opaque (e.g. `*(void**)demo_type.opaque`) to map the actual field layout.
+	2. Verify specific field values match known test data (e.g. array size=1, int value=42, string content).
+	3. Write natvis expressions only after the field offsets are confirmed.
+
+	Evaluator constraints (JetBrains natvis engine, I haven't checked anything else):
+	- Supports: reinterpret_cast, pointer arithmetic on built-in types, array indexing ([n]), Intrinsics
+	- Does NOT support: calling member functions (e.g. size())
+	- Nested type visualizers work: `{*(godot::String*)(opaque+8)}` delegates to the String natvis entry
+
+	Patterns used:
+	- Opaque wrapper types (String, StringName, Array, Dictionary, ...): cast opaque slice to the
+	  godot-cpp type pointer — `*(godot::TypeName*)(opaque+N)` — and let that type's natvis handle display
+	- Engine heap-allocated types stored as pointer (Transform2D, AABB, Basis, ...): double-deref —
+	  `**(godot::TypeName**)(opaque+N)`
+	- Engine internals without a godot-cpp wrapper (ArrayPrivate, CowData, HashMap): use raw
+	  reinterpret_cast + index arithmetic, document offsets with a comment verified by LLDB
+
+	Future upcomming improvements:
+	- JetBrains natvis support is going to become x-plat https://youtrack.jetbrains.com/issue/CPP-35297
 	-->
 
 	<!-- opaque[0..7] holds ArrayPrivate*. Dereference as unsigned long long* to read ArrayPrivate
