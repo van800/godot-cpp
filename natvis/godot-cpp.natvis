@@ -9,7 +9,7 @@
 	</Type>
 
 	<Type Name="godot::StringName">
-		<Intrinsic Name="get_data_ptr" Expression="(*reinterpret_cast&lt;const char32_t***&gt;(opaque))[1]" />
+		<Intrinsic Name="get_data_ptr" Expression="(*reinterpret_cast&lt;const char32_t***&gt;(opaque))[1]"/>
 		<DisplayString Condition="get_data_ptr()">{get_data_ptr(),s32}</DisplayString>
 		<Expand>
 			<Item Name="opaque_ptr">*reinterpret_cast&lt;void**&gt;(opaque)</Item>
@@ -17,39 +17,15 @@
 		</Expand>
 	</Type>
 
-	<!-- Development notes: At the current state no AI can directly generate a natvis entry for each `godot::` type.
-	The testdata used for evaluation https://github.com/JetBrains/godot-support/wiki/Developing-godot%E2%80%90cpp.natvis
-	The change of the memory layout would require adjustments of the natvis
-
-	Approach:
-	1. For each type, inspect `opaque` bytes in LLDB using `memory read -size 8 -count N -format address` on
-	   the address stored in opaque (e.g. `*(void**)demo_type.opaque`) to map the actual field layout.
-	2. Verify specific field values match known test data (e.g. array size=1, int value=42, string content).
-	3. Write natvis expressions only after the field offsets are confirmed.
-
-	Evaluator constraints (JetBrains natvis engine, I haven't checked anything else):
-	- Supports: reinterpret_cast, pointer arithmetic on built-in types, array indexing ([n]), Intrinsics
-	- Does NOT support: calling member functions (e.g. size())
-	- Nested type visualizers work: `{*(godot::String*)(opaque+8)}` delegates to the String natvis entry
-
-	Patterns used:
-	- Opaque wrapper types (String, StringName, Array, Dictionary, ...): cast opaque slice to the
-	  godot-cpp type pointer — `*(godot::TypeName*)(opaque+N)` — and let that type's natvis handle display
-	- Engine heap-allocated types stored as pointer (Transform2D, AABB, Basis, ...): double-deref —
-	  `**(godot::TypeName**)(opaque+N)`
-	- Engine internals without a godot-cpp wrapper (ArrayPrivate, CowData, HashMap): use raw
-	  reinterpret_cast + index arithmetic, document offsets with a comment verified by LLDB
-
-	Future upcomming improvements:
-	- JetBrains natvis support is going to become x-plat https://youtrack.jetbrains.com/issue/CPP-35297
-	-->
+	<!-- Developer notes: https://jb.gg/godot-cpp-natvis -->
 
 	<!-- opaque[0..7] holds ArrayPrivate*. Dereference as unsigned long long* to read ArrayPrivate
 	     fields as 8-byte slots: [0]=refcount, [1]=unknown, [2]=_cowdata._ptr, [3]=read_only, ...
 	     Index [2] reaches _cowdata._ptr at offset +16 (verified by LLDB memory dump).
 	     Cast _ptr to unsigned long long* so [-1] reads the CowData element count 8 bytes before data. -->
 	<Type Name="godot::Array">
-		<Intrinsic Name="_cow" Expression="(unsigned long long*)(*reinterpret_cast&lt;unsigned long long**&gt;(opaque))[2]" />
+		<Intrinsic Name="_cow"
+		           Expression="(unsigned long long*)(*reinterpret_cast&lt;unsigned long long**&gt;(opaque))[2]"/>
 		<DisplayString Condition="!*reinterpret_cast&lt;void**&gt;(opaque) || !_cow()">{{empty}}</DisplayString>
 		<DisplayString>{{size={_cow()[-1]}}}</DisplayString>
 		<Expand>
@@ -66,16 +42,16 @@
 	     HashMap: [_elements(8)][unknown(8)][_head(8)][_last(8)][_capacity_index(4)][_num_elements(4)]
 	     HashMapElement: [next(8)][prev(8)][key:Variant(24)][value:Variant(24)] -->
 	<Type Name="godot::Dictionary">
-		<Intrinsic Name="_p"    Expression="*reinterpret_cast&lt;unsigned char**&gt;(opaque)" />
-		<Intrinsic Name="_size" Expression="*(unsigned int*)(_p() + 52)" />
-		<Intrinsic Name="_head" Expression="*reinterpret_cast&lt;unsigned char**&gt;(_p() + 32)" />
+		<Intrinsic Name="_p" Expression="*reinterpret_cast&lt;unsigned char**&gt;(opaque)"/>
+		<Intrinsic Name="_size" Expression="*(unsigned int*)(_p() + 52)"/>
+		<Intrinsic Name="_head" Expression="*reinterpret_cast&lt;unsigned char**&gt;(_p() + 32)"/>
 		<DisplayString Condition="!_p()">{{empty}}</DisplayString>
 		<DisplayString>{{size={_size()}}}</DisplayString>
 		<Expand>
 			<Item Name="[size]">_size()</Item>
 			<CustomListItems MaxItemsPerView="5000">
 				<Variable Name="elem" InitialValue="(unsigned char*)_head()"/>
-				<Variable Name="idx"  InitialValue="0"/>
+				<Variable Name="idx" InitialValue="0"/>
 				<Loop Condition="elem != 0">
 					<Item Name="[{idx}]">(godot::Variant*)(elem + 16),[2]</Item>
 					<Exec>elem = *(unsigned char**)elem</Exec>
@@ -93,7 +69,7 @@
 	     DICTIONARY=27 ARRAY=28
 	     Layout: opaque[0..3]=type(int32), opaque[4..7]=pad, opaque[8..23]=_data union -->
 	<Type Name="godot::Variant">
-		<Intrinsic Name="_type" Expression="*reinterpret_cast&lt;int*&gt;(opaque)" />
+		<Intrinsic Name="_type" Expression="*reinterpret_cast&lt;int*&gt;(opaque)"/>
 		<DisplayString Condition="_type() == 0">nil</DisplayString>
 		<DisplayString Condition="_type() == 1">{*reinterpret_cast&lt;bool*&gt;(opaque+8)}</DisplayString>
 		<DisplayString Condition="_type() == 2">{*reinterpret_cast&lt;long long*&gt;(opaque+8)}</DisplayString>
@@ -125,7 +101,8 @@
 		<DisplayString Condition="_type() == 18">{**(godot::Transform3D**)(opaque+8)}</DisplayString>
 		<DisplayString Condition="_type() == 19">{**(godot::Projection**)(opaque+8)}</DisplayString>
 		<!-- OBJECT: opaque+8=ObjectID, opaque+16=Object* -->
-		<DisplayString Condition="_type() == 24">Object(id={*reinterpret_cast&lt;unsigned long long*&gt;(opaque+8)})</DisplayString>
+		<DisplayString Condition="_type() == 24">Object(id={*reinterpret_cast&lt;unsigned long long*&gt;(opaque+8)})
+		</DisplayString>
 		<DisplayString>{{type={_type()}}}</DisplayString>
 		<Expand>
 			<Item Name="[type]">_type()</Item>
