@@ -77,8 +77,7 @@
 				<Variable Name="elem" InitialValue="(unsigned char*)_head()"/>
 				<Variable Name="idx"  InitialValue="0"/>
 				<Loop Condition="elem != 0">
-					<Item Name="[{idx}].key">*(godot::Variant*)(elem + 16)</Item>
-					<Item Name="[{idx}].value">*(godot::Variant*)(elem + 40)</Item>
+					<Item Name="[{idx}]">(godot::Variant*)(elem + 16),[2]</Item>
 					<Exec>elem = *(unsigned char**)elem</Exec>
 					<Exec>idx++</Exec>
 				</Loop>
