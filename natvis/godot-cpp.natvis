@@ -27,11 +27,11 @@
 		<Intrinsic Name="_cow"
 		           Expression="(unsigned long long*)(*reinterpret_cast&lt;unsigned long long**&gt;(opaque))[2]"/>
 		<DisplayString Condition="!*reinterpret_cast&lt;void**&gt;(opaque) || !_cow()">{{empty}}</DisplayString>
-		<DisplayString>{{size={_cow()[-1]}}}</DisplayString>
+		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
 		<Expand>
-			<Item Name="[size]">_cow()[-1]</Item>
+			<Item Name="[size]">_cow()[-2]</Item>
 			<ArrayItems>
-				<Size>_cow()[-1]</Size>
+				<Size>_cow()[-2]</Size>
 				<ValuePointer>(godot::Variant*)_cow()</ValuePointer>
 			</ArrayItems>
 		</Expand>
@@ -130,6 +130,362 @@
 			<ExpandedItem Condition="_type() == 26">*(godot::Signal*)(opaque+8)</ExpandedItem>
 			<ExpandedItem Condition="_type() == 27">*(godot::Dictionary*)(opaque+8)</ExpandedItem>
 			<ExpandedItem Condition="_type() == 28">*(godot::Array*)(opaque+8)</ExpandedItem>
+		</Expand>
+	</Type>
+
+	<!-- godot::Packed*Array layout.
+     opaque (16 bytes):
+         [0..7]   reserved / 0 (godot-cpp over-allocates; engine type is 8 bytes)
+         [8..15]  _cowdata._ptr  (T *)
+     CowData allocation block (same header as godot::Array):
+         +0   uint64_t                size
+         +8   SafeNumeric<uint64_t>   refcount
+         +16  T  data[size]      <- _ptr points here
+     _cow reads (opaque + 8) as 'unsigned long long*'
+     _cow()[-2] gives the size at _ptr-16
+     Per-type only <ValuePointer> changes. -->
+
+	<Type Name="godot::PackedByteArray">
+		<Intrinsic Name="_cow"
+		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
+		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
+		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<Expand>
+			<Item Name="[size]">_cow()[-2]</Item>
+			<ArrayItems>
+				<Size>_cow()[-2]</Size>
+				<ValuePointer>(unsigned char*)_cow()</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::PackedInt32Array">
+		<Intrinsic Name="_cow"
+		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
+		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
+		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<Expand>
+			<Item Name="[size]">_cow()[-2]</Item>
+			<ArrayItems>
+				<Size>_cow()[-2]</Size>
+				<ValuePointer>(int*)_cow()</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::PackedInt64Array">
+		<Intrinsic Name="_cow"
+		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
+		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
+		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<Expand>
+			<Item Name="[size]">_cow()[-2]</Item>
+			<ArrayItems>
+				<Size>_cow()[-2]</Size>
+				<ValuePointer>(long long*)_cow()</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::PackedFloat32Array">
+		<Intrinsic Name="_cow"
+		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
+		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
+		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<Expand>
+			<Item Name="[size]">_cow()[-2]</Item>
+			<ArrayItems>
+				<Size>_cow()[-2]</Size>
+				<ValuePointer>(float*)_cow()</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::PackedFloat64Array">
+		<Intrinsic Name="_cow"
+		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
+		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
+		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<Expand>
+			<Item Name="[size]">_cow()[-2]</Item>
+			<ArrayItems>
+				<Size>_cow()[-2]</Size>
+				<ValuePointer>(double*)_cow()</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::PackedStringArray">
+		<Intrinsic Name="_cow"
+		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
+		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
+		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<Expand>
+			<Item Name="[size]">_cow()[-2]</Item>
+			<ArrayItems>
+				<Size>_cow()[-2]</Size>
+				<ValuePointer>(godot::String*)_cow()</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::PackedVector2Array">
+		<Intrinsic Name="_cow"
+		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
+		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
+		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<Expand>
+			<Item Name="[size]">_cow()[-2]</Item>
+			<ArrayItems>
+				<Size>_cow()[-2]</Size>
+				<ValuePointer>(godot::Vector2*)_cow()</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::PackedVector3Array">
+		<Intrinsic Name="_cow"
+		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
+		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
+		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<Expand>
+			<Item Name="[size]">_cow()[-2]</Item>
+			<ArrayItems>
+				<Size>_cow()[-2]</Size>
+				<ValuePointer>(godot::Vector3*)_cow()</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::PackedVector4Array">
+		<Intrinsic Name="_cow"
+		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
+		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
+		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<Expand>
+			<Item Name="[size]">_cow()[-2]</Item>
+			<ArrayItems>
+				<Size>_cow()[-2]</Size>
+				<ValuePointer>(godot::Vector4*)_cow()</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::PackedColorArray">
+		<Intrinsic Name="_cow"
+		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
+		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
+		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<Expand>
+			<Item Name="[size]">_cow()[-2]</Item>
+			<ArrayItems>
+				<Size>_cow()[-2]</Size>
+				<ValuePointer>(godot::Color*)_cow()</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::Vector2">
+		<DisplayString>({x,g}, {y,g})</DisplayString>
+		<Expand>
+			<Item Name="[x]">x</Item>
+			<Item Name="[y]">y</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::Vector2i">
+		<DisplayString>({x}, {y})</DisplayString>
+		<Expand>
+			<Item Name="[x]">x</Item>
+			<Item Name="[y]">y</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::Vector3">
+		<DisplayString>({x,g}, {y,g}, {z,g})</DisplayString>
+		<Expand>
+			<Item Name="[x]">x</Item>
+			<Item Name="[y]">y</Item>
+			<Item Name="[z]">z</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::Vector3i">
+		<DisplayString>({x}, {y}, {z})</DisplayString>
+		<Expand>
+			<Item Name="[x]">x</Item>
+			<Item Name="[y]">y</Item>
+			<Item Name="[z]">z</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::Vector4">
+		<DisplayString>({x,g}, {y,g}, {z,g}, {w,g})</DisplayString>
+		<Expand>
+			<Item Name="[x]">x</Item>
+			<Item Name="[y]">y</Item>
+			<Item Name="[z]">z</Item>
+			<Item Name="[w]">w</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::Vector4i">
+		<DisplayString>({x}, {y}, {z}, {w})</DisplayString>
+		<Expand>
+			<Item Name="[x]">x</Item>
+			<Item Name="[y]">y</Item>
+			<Item Name="[z]">z</Item>
+			<Item Name="[w]">w</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::Quaternion">
+		<DisplayString>({x,g}, {y,g}, {z,g}, {w,g})</DisplayString>
+		<Expand>
+			<Item Name="[x]">x</Item>
+			<Item Name="[y]">y</Item>
+			<Item Name="[z]">z</Item>
+			<Item Name="[w]">w</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::Color">
+		<DisplayString>({r,g}, {g,g}, {b,g}, {a,g})</DisplayString>
+		<Expand>
+			<Item Name="[red]">r</Item>
+			<Item Name="[green]">g</Item>
+			<Item Name="[blue]">b</Item>
+			<Item Name="[alpha]">a</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::Plane">
+		<DisplayString>[N: {normal}, D: {d,g}]</DisplayString>
+		<Expand>
+			<Item Name="[normal]">normal,nr</Item>
+			<Item Name="[d]">d</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::Rect2">
+		<DisplayString>[P: {position}, S: {size}]</DisplayString>
+		<Expand>
+			<Item Name="[position]">position,nr</Item>
+			<Item Name="[size]">size,nr</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::Rect2i">
+		<DisplayString>[P: {position}, S: {size}]</DisplayString>
+		<Expand>
+			<Item Name="[position]">position,nr</Item>
+			<Item Name="[size]">size,nr</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::AABB">
+		<DisplayString>[P: {position}, S: {size}]</DisplayString>
+		<Expand>
+			<Item Name="[position]">position,nr</Item>
+			<Item Name="[size]">size,nr</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::Basis">
+		<DisplayString>[X: {rows[0]}, Y: {rows[1]}, Z: {rows[2]}]</DisplayString>
+		<Expand>
+			<Item Name="[x]">rows[0],nr</Item>
+			<Item Name="[y]">rows[1],nr</Item>
+			<Item Name="[z]">rows[2],nr</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::Projection">
+		<DisplayString>[X: {columns[0]}, Y: {columns[1]}, Z: {columns[2]}, W: {columns[3]}]</DisplayString>
+		<Expand>
+			<Item Name="[x]">columns[0],nr</Item>
+			<Item Name="[y]">columns[1],nr</Item>
+			<Item Name="[z]">columns[2],nr</Item>
+			<Item Name="[w]">columns[3],nr</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::Transform2D">
+		<DisplayString>[X: {columns[0]}, Y: {columns[1]}, O: {columns[2]}]</DisplayString>
+		<Expand>
+			<Item Name="[x]">columns[0],nr</Item>
+			<Item Name="[y]">columns[1],nr</Item>
+			<Item Name="[origin]">columns[2],nr</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::Transform3D">
+		<DisplayString>[X: ({basis.rows[0].x,g}, {basis.rows[1].x,g}, {basis.rows[2].x,g}), Y: ({basis.rows[0].y,g},
+			{basis.rows[1].y,g}, {basis.rows[2].y,g}), Z: ({basis.rows[0].z,g}, {basis.rows[1].z,g},
+			{basis.rows[2].z,g}), O: {origin}]
+		</DisplayString>
+		<Expand>
+			<Synthetic Name="[x]">
+				<DisplayString>({basis.rows[0].x,g}, {basis.rows[1].x,g}, {basis.rows[2].x,g})</DisplayString>
+				<Expand>
+					<Item Name="[x]">basis.rows[0].x</Item>
+					<Item Name="[y]">basis.rows[1].x</Item>
+					<Item Name="[z]">basis.rows[2].x</Item>
+				</Expand>
+			</Synthetic>
+			<Synthetic Name="[y]">
+				<DisplayString>({basis.rows[0].y,g}, {basis.rows[1].y,g}, {basis.rows[2].y,g})</DisplayString>
+				<Expand>
+					<Item Name="[x]">basis.rows[0].y</Item>
+					<Item Name="[y]">basis.rows[1].y</Item>
+					<Item Name="[z]">basis.rows[2].y</Item>
+				</Expand>
+			</Synthetic>
+			<Synthetic Name="[z]">
+				<DisplayString>({basis.rows[0].z,g}, {basis.rows[1].z,g}, {basis.rows[2].z,g})</DisplayString>
+				<Expand>
+					<Item Name="[x]">basis.rows[0].z</Item>
+					<Item Name="[y]">basis.rows[1].z</Item>
+					<Item Name="[z]">basis.rows[2].z</Item>
+				</Expand>
+			</Synthetic>
+			<Item Name="[origin]">origin,nr</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="godot::NodePath">
+		<Intrinsic Name="_cow"
+		           Expression="*reinterpret_cast&lt;unsigned char**&gt;(opaque)"/>
+		<Intrinsic Name="_path_ptr"
+		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(_cow() + 16)"/>
+		<Intrinsic Name="_subpath_ptr"
+		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(_cow() + 24)"/>
+		<Intrinsic Name="_absolute" Expression="*(bool*)(_cow() + 32)"/>
+		<DisplayString Condition="!_cow()">[empty]</DisplayString>
+		<DisplayString>{{absolute={_absolute()}, path[{_path_ptr()[-2]}], subpath[{_subpath_ptr()[-2]}]}}
+		</DisplayString>
+		<Expand>
+			<Item Name="[absolute]">_absolute()</Item>
+			<Synthetic Name="[path]">
+				<DisplayString Condition="!_path_ptr()">[empty]</DisplayString>
+				<DisplayString>{{size={_path_ptr()[-2]}}}</DisplayString>
+				<Expand>
+					<ArrayItems Condition="_path_ptr() != 0">
+						<Size>_path_ptr()[-2]</Size>
+						<ValuePointer>(godot::StringName*)_path_ptr()</ValuePointer>
+					</ArrayItems>
+				</Expand>
+			</Synthetic>
+			<Synthetic Name="[subpath]">
+				<DisplayString Condition="!_subpath_ptr()">[empty]</DisplayString>
+				<DisplayString>{{size={_subpath_ptr()[-2]}}}</DisplayString>
+				<Expand>
+					<ArrayItems Condition="_subpath_ptr() != 0">
+						<Size>_subpath_ptr()[-2]</Size>
+						<ValuePointer>(godot::StringName*)_subpath_ptr()</ValuePointer>
+					</ArrayItems>
+				</Expand>
+			</Synthetic>
 		</Expand>
 	</Type>
 </AutoVisualizer>
