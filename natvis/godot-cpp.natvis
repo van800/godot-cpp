@@ -27,12 +27,12 @@
 		<Intrinsic Name="_cow"
 		           Expression="(unsigned long long*)(*reinterpret_cast&lt;unsigned long long**&gt;(opaque))[2]"/>
 		<DisplayString Condition="!*reinterpret_cast&lt;void**&gt;(opaque) || !_cow()">{{empty}}</DisplayString>
-		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<DisplayString>{{size={_cow()[-1]}}}</DisplayString>
 		<Expand>
-			<Item Name="[size]" Condition="_cow() != 0">_cow()[-2]</Item>
+			<Item Name="[size]" Condition="_cow() != 0">_cow()[-1]</Item>
 			<Item Name="[size]" Condition="_cow() == 0">0,d</Item>
 			<ArrayItems Condition="_cow() != 0">
-				<Size>_cow()[-2]</Size>
+				<Size>_cow()[-1]</Size>
 				<ValuePointer>(godot::Variant*)_cow()</ValuePointer>
 			</ArrayItems>
 		</Expand>
@@ -139,22 +139,22 @@
          [0..7]   reserved / 0 (godot-cpp over-allocates; engine type is 8 bytes)
          [8..15]  _cowdata._ptr  (T *)
      CowData allocation block (same header as godot::Array):
-         +0   uint64_t                size
-         +8   SafeNumeric<uint64_t>   refcount
+         +0   SafeNumeric<uint64_t>   refcount
+         +8   uint64_t                size
          +16  T  data[size]      <- _ptr points here
      _cow reads (opaque + 8) as 'unsigned long long*'
-     _cow()[-2] gives the size at _ptr-16
+     _cow()[-1] gives the size at _ptr-8 (refcount is at _ptr-16, i.e. _cow()[-2])
      Per-type only <ValuePointer> changes. -->
 
 	<Type Name="godot::PackedByteArray">
 		<Intrinsic Name="_cow"
 		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
 		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
-		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<DisplayString>{{size={_cow()[-1]}}}</DisplayString>
 		<Expand>
-			<Item Name="[size]">_cow()[-2]</Item>
+			<Item Name="[size]">_cow()[-1]</Item>
 			<ArrayItems>
-				<Size>_cow()[-2]</Size>
+				<Size>_cow()[-1]</Size>
 				<ValuePointer>(unsigned char*)_cow()</ValuePointer>
 			</ArrayItems>
 		</Expand>
@@ -164,11 +164,11 @@
 		<Intrinsic Name="_cow"
 		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
 		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
-		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<DisplayString>{{size={_cow()[-1]}}}</DisplayString>
 		<Expand>
-			<Item Name="[size]">_cow()[-2]</Item>
+			<Item Name="[size]">_cow()[-1]</Item>
 			<ArrayItems>
-				<Size>_cow()[-2]</Size>
+				<Size>_cow()[-1]</Size>
 				<ValuePointer>(int*)_cow()</ValuePointer>
 			</ArrayItems>
 		</Expand>
@@ -178,11 +178,11 @@
 		<Intrinsic Name="_cow"
 		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
 		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
-		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<DisplayString>{{size={_cow()[-1]}}}</DisplayString>
 		<Expand>
-			<Item Name="[size]">_cow()[-2]</Item>
+			<Item Name="[size]">_cow()[-1]</Item>
 			<ArrayItems>
-				<Size>_cow()[-2]</Size>
+				<Size>_cow()[-1]</Size>
 				<ValuePointer>(long long*)_cow()</ValuePointer>
 			</ArrayItems>
 		</Expand>
@@ -192,11 +192,11 @@
 		<Intrinsic Name="_cow"
 		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
 		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
-		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<DisplayString>{{size={_cow()[-1]}}}</DisplayString>
 		<Expand>
-			<Item Name="[size]">_cow()[-2]</Item>
+			<Item Name="[size]">_cow()[-1]</Item>
 			<ArrayItems>
-				<Size>_cow()[-2]</Size>
+				<Size>_cow()[-1]</Size>
 				<ValuePointer>(float*)_cow()</ValuePointer>
 			</ArrayItems>
 		</Expand>
@@ -206,11 +206,11 @@
 		<Intrinsic Name="_cow"
 		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
 		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
-		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<DisplayString>{{size={_cow()[-1]}}}</DisplayString>
 		<Expand>
-			<Item Name="[size]">_cow()[-2]</Item>
+			<Item Name="[size]">_cow()[-1]</Item>
 			<ArrayItems>
-				<Size>_cow()[-2]</Size>
+				<Size>_cow()[-1]</Size>
 				<ValuePointer>(double*)_cow()</ValuePointer>
 			</ArrayItems>
 		</Expand>
@@ -220,11 +220,11 @@
 		<Intrinsic Name="_cow"
 		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
 		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
-		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<DisplayString>{{size={_cow()[-1]}}}</DisplayString>
 		<Expand>
-			<Item Name="[size]">_cow()[-2]</Item>
+			<Item Name="[size]">_cow()[-1]</Item>
 			<ArrayItems>
-				<Size>_cow()[-2]</Size>
+				<Size>_cow()[-1]</Size>
 				<ValuePointer>(godot::String*)_cow()</ValuePointer>
 			</ArrayItems>
 		</Expand>
@@ -234,11 +234,11 @@
 		<Intrinsic Name="_cow"
 		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
 		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
-		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<DisplayString>{{size={_cow()[-1]}}}</DisplayString>
 		<Expand>
-			<Item Name="[size]">_cow()[-2]</Item>
+			<Item Name="[size]">_cow()[-1]</Item>
 			<ArrayItems>
-				<Size>_cow()[-2]</Size>
+				<Size>_cow()[-1]</Size>
 				<ValuePointer>(godot::Vector2*)_cow()</ValuePointer>
 			</ArrayItems>
 		</Expand>
@@ -248,11 +248,11 @@
 		<Intrinsic Name="_cow"
 		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
 		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
-		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<DisplayString>{{size={_cow()[-1]}}}</DisplayString>
 		<Expand>
-			<Item Name="[size]">_cow()[-2]</Item>
+			<Item Name="[size]">_cow()[-1]</Item>
 			<ArrayItems>
-				<Size>_cow()[-2]</Size>
+				<Size>_cow()[-1]</Size>
 				<ValuePointer>(godot::Vector3*)_cow()</ValuePointer>
 			</ArrayItems>
 		</Expand>
@@ -262,11 +262,11 @@
 		<Intrinsic Name="_cow"
 		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
 		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
-		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<DisplayString>{{size={_cow()[-1]}}}</DisplayString>
 		<Expand>
-			<Item Name="[size]">_cow()[-2]</Item>
+			<Item Name="[size]">_cow()[-1]</Item>
 			<ArrayItems>
-				<Size>_cow()[-2]</Size>
+				<Size>_cow()[-1]</Size>
 				<ValuePointer>(godot::Vector4*)_cow()</ValuePointer>
 			</ArrayItems>
 		</Expand>
@@ -276,11 +276,11 @@
 		<Intrinsic Name="_cow"
 		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(opaque + 8)"/>
 		<DisplayString Condition="!_cow()">{{empty}}</DisplayString>
-		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
+		<DisplayString>{{size={_cow()[-1]}}}</DisplayString>
 		<Expand>
-			<Item Name="[size]">_cow()[-2]</Item>
+			<Item Name="[size]">_cow()[-1]</Item>
 			<ArrayItems>
-				<Size>_cow()[-2]</Size>
+				<Size>_cow()[-1]</Size>
 				<ValuePointer>(godot::Color*)_cow()</ValuePointer>
 			</ArrayItems>
 		</Expand>
@@ -463,26 +463,26 @@
 		           Expression="*reinterpret_cast&lt;unsigned long long**&gt;(_cow() + 24)"/>
 		<Intrinsic Name="_absolute" Expression="*(bool*)(_cow() + 32)"/>
 		<DisplayString Condition="!_cow()">[empty]</DisplayString>
-		<DisplayString>{{absolute={_absolute()}, path[{_path_ptr()[-2]}], subpath[{_subpath_ptr()[-2]}]}}
+		<DisplayString>{{absolute={_absolute()}, path[{_path_ptr()[-1]}], subpath[{_subpath_ptr()[-1]}]}}
 		</DisplayString>
 		<Expand>
 			<Item Name="[absolute]">_absolute()</Item>
 			<Synthetic Name="[path]">
 				<DisplayString Condition="!_path_ptr()">[empty]</DisplayString>
-				<DisplayString>{{size={_path_ptr()[-2]}}}</DisplayString>
+				<DisplayString>{{size={_path_ptr()[-1]}}}</DisplayString>
 				<Expand>
 					<ArrayItems Condition="_path_ptr() != 0">
-						<Size>_path_ptr()[-2]</Size>
+						<Size>_path_ptr()[-1]</Size>
 						<ValuePointer>(godot::StringName*)_path_ptr()</ValuePointer>
 					</ArrayItems>
 				</Expand>
 			</Synthetic>
 			<Synthetic Name="[subpath]">
 				<DisplayString Condition="!_subpath_ptr()">[empty]</DisplayString>
-				<DisplayString>{{size={_subpath_ptr()[-2]}}}</DisplayString>
+				<DisplayString>{{size={_subpath_ptr()[-1]}}}</DisplayString>
 				<Expand>
 					<ArrayItems Condition="_subpath_ptr() != 0">
-						<Size>_subpath_ptr()[-2]</Size>
+						<Size>_subpath_ptr()[-1]</Size>
 						<ValuePointer>(godot::StringName*)_subpath_ptr()</ValuePointer>
 					</ArrayItems>
 				</Expand>
