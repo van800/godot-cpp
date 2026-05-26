@@ -29,8 +29,9 @@
 		<DisplayString Condition="!*reinterpret_cast&lt;void**&gt;(opaque) || !_cow()">{{empty}}</DisplayString>
 		<DisplayString>{{size={_cow()[-2]}}}</DisplayString>
 		<Expand>
-			<Item Name="[size]">_cow()[-2]</Item>
-			<ArrayItems>
+			<Item Name="[size]" Condition="_cow() != 0">_cow()[-2]</Item>
+			<Item Name="[size]" Condition="_cow() == 0">0,d</Item>
+			<ArrayItems Condition="_cow() != 0">
 				<Size>_cow()[-2]</Size>
 				<ValuePointer>(godot::Variant*)_cow()</ValuePointer>
 			</ArrayItems>
@@ -106,30 +107,30 @@
 		<DisplayString>{{type={_type()}}}</DisplayString>
 		<Expand>
 			<Item Name="[type]">_type()</Item>
-			<ExpandedItem Condition="_type() == 4">*(godot::String*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 5">*(godot::Vector2*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 6">*(godot::Vector2i*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 7">*(godot::Rect2*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 8">*(godot::Rect2i*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 9">*(godot::Vector3*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 10">*(godot::Vector3i*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 11">**(godot::Transform2D**)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 12">*(godot::Vector4*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 13">*(godot::Vector4i*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 14">*(godot::Plane*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 15">*(godot::Quaternion*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 16">**(godot::AABB**)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 17">**(godot::Basis**)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 18">**(godot::Transform3D**)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 19">**(godot::Projection**)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 20">*(godot::Color*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 21">*(godot::StringName*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 22">*(godot::NodePath*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 23">*(godot::RID*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 25">*(godot::Callable*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 26">*(godot::Signal*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 27">*(godot::Dictionary*)(opaque+8)</ExpandedItem>
-			<ExpandedItem Condition="_type() == 28">*(godot::Array*)(opaque+8)</ExpandedItem>
+			<Item Name="[value]" Condition="_type() == 4">*(godot::String*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 5">*(godot::Vector2*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 6">*(godot::Vector2i*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 7">*(godot::Rect2*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 8">*(godot::Rect2i*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 9">*(godot::Vector3*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 10">*(godot::Vector3i*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 11">**(godot::Transform2D**)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 12">*(godot::Vector4*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 13">*(godot::Vector4i*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 14">*(godot::Plane*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 15">*(godot::Quaternion*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 16">**(godot::AABB**)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 17">**(godot::Basis**)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 18">**(godot::Transform3D**)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 19">**(godot::Projection**)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 20">*(godot::Color*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 21">*(godot::StringName*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 22">*(godot::NodePath*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 23">*(godot::RID*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 25">*(godot::Callable*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 26">*(godot::Signal*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 27">*(godot::Dictionary*)(opaque+8)</Item>
+			<Item Name="[value]" Condition="_type() == 28">*(godot::Array*)(opaque+8)</Item>
 		</Expand>
 	</Type>
 
